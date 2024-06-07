@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block body %}
+<!-- INIT******************************************MESSAGES SECTION****************************************** -->
+    
+{% if messages %}
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+{% endif %}
+
+<!-- END*******************************************MESSAGES SECTION****************************************** -->
+<div class="text-center container form-style">
+    <main>
+        
+        <form action="" method="post">{% csrf_token %}
+            <div class="px-5 py-2 mb-4">
+                <div class="bg-primary rounded-circle">
+                    <img class="mb-4" src="{% static 'img/login.png' %}" width="90" height="90">
+                </div>
+            </div>
+            <div class="mb-3 text-start">
+                <label class="form-label">Email:</label>
+                <input type="text" class="form-control" name="email">
+            </div>
+            <div class="mb-3 text-start">
+                <label class="form-label">Contraseña:</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <button type="submit" class="w-100 btn btn-primary">Entrar</button>
+            <div class="mt-1 text-start">
+                <a href="{% url 'register' %}">¿No tienes cuenta? Registrate ahora</a>
+            </div>
+            <p class="mt-5 mb-3 text-muted">Copyright © {% now 'Y' %} Djcom</p>
+        </form>
+    </main>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

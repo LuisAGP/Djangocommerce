@@ -1,0 +1,134 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block content_header %}
+<h2>Nuevo Producto</h2>
+{% endblock %}
+
+{% block content %}
+<script>
+    window.onload = () => {
+        
+        try{
+
+            const options  = [
+                ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                ['blockquote', 'code-block'],
+                ['link', 'image'],
+
+                [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                [{ 'direction': 'rtl' }],                         // text direction
+
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+
+                ['clean']                                         // remove formatting button
+            ];
+
+
+            if(document.getElementById("editor")){
+
+                quill = new Quill('#editor', {
+                    modules: {
+                        toolbar: options  // Include button in toolbar
+                    },
+                    theme: 'snow'
+                });
+
+            }
+
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+</script>
+<div class="d-flex justify-content-center mt-2">
+    <form action="" data-url="/admin_panel/nuevo_producto/" class="container" method="POST" enctype="multipart/form-data" onsubmit="return guardarProducto(this)">{% csrf_token %}
+        <div class="form-group">
+            <label for="producto-categoria" class="form-label mt-1">Categoria:</label>
+            <select name="categoria" id="producto-categoria" class="form-control">
+                <option value="" disabled selected>--</option>
+                {% for categoria in categorias %}
+                    <option value="{{categoria.identificador}}">{{categoria.nombre}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="producto-nombre" class="form-label mt-1">Nombre:</label>
+            <input type="text" class="form-control" name="nombre">
+        </div>
+        <div class="form-group">
+            <label for="producto-codigo" class="form-label mt-1">Codigo de producto:</label>
+            <input type="text" class="form-control" name="codigo">
+        </div>
+        <div class="form-group">
+            <label for="producto-imagenes" class="form-label mt-1">Imagenes:</label>
+            <input class="form-control" type="file" id="producto-imagenes" name="imagen" onchange="previewImages(this);" multiple>
+        </div>
+        <div class="w-100 border row" id="producto-imagenes-preview" style="min-height: 150px"></div>
+        <div class="form-group">
+            <label for="producto-genero" class="form-label mt-1">Genero:</label>
+            <select name="genero" id="producto-genero" class="form-control">
+                <option value="" disabled selected>--</option>
+                {% for genero in generos %}
+                    <option value="{{genero.0}}">{{genero.1}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="producto-descripcion" class="form-label mt-1">Descripción:</label>            
+            <div id="editor" style="background-color: white;"></div>
+        </div>
+        <div class="form-group">
+            <label for="producto-precio_venta" class="form-label mt-1">Precio de venta:</label>
+            <input type="number" class="form-control" name="precio_venta">
+        </div>
+        <div class="form-group">
+            <label for="producto-precio_compra" class="form-label mt-1">Precio de compra:</label>
+            <input type="number" class="form-control" name="precio_compra">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label mt-1">Tallas y stock:</label>
+            <div class="container mt-2 overflow-auto">
+
+                <div class="row">
+                    {% for talla in tallas %}
+                    <div class="col-lg-3 col-md-4 mt-2 px-3">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="{{talla.0}}" id="checkbox{{talla.0}}" onclick="cambiarStock(this);" data-id_input="input{{talla.0}}">
+                                    <input type="hidden" value="{{ talla.0 }}" name="tallas[]">
+                                    <label class="form-check-label" for="checkbox{{talla.0}}">
+                                        <i class="bi bi-rulers text-secondary"></i> {{ talla.0 }}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <input type="number" class="form-control input_stock" name="stock_talla[]" value="0" readonly id="input{{talla.0}}" onchange="recalcularStock()">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="producto-stock" class="form-label mt-1">Stock:</label>
+            <input type="number" class="form-control" name="stock" id="producto-stock" readonly value="0">
+        </div>
+
+        <input type="submit" class="btn btn-danger my-4" value="Guardar">
+
+    </form>
+</div>
+{% endblock %}

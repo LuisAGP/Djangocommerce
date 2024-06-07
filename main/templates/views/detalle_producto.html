@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}{{ producto.nombre }}{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/detalle_producto.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row h-50">
+        <div class="col-lg-8 col-sm-12">
+            <div class="row d-flex justify-content-center align-items-center flex-sm-column-reverse flex-lg-row">
+
+                <!--********************************************** CARRUSEL DE IMAGENES **********************************************-->
+
+                <div class="col-lg-2 col-md-12 col-sm-12 d-flex flex-lg-column flex-sm-row justify-content-center align-items-center" style="max-height: 25rem;">
+                    <button class="btn w-100 fs-2 border-0 w-auto h-auto d-none d-sm-none d-lg-block" onclick="previousImage()">
+                        <i class="bi bi-chevron-compact-up"></i>
+                    </button>
+                    <button class="btn w-100 fs-2 border-0 w-auto h-auto d-lg-none d-sm-block" onclick="previousImage()">
+                        <i class="bi bi-chevron-compact-left"></i>
+                    </button>
+                    <div class="d-flex flex-lg-column flex-sm-row no-scroll p-1" style="overflow: auto;">
+                        {% for i in producto.imagenproducto_set.all %}
+                            {% if i.id == producto.imagenproducto_set.first.id %}
+                            <button id="image-{{i.id}}" data-img_url="{{ i.imagen.url }}" class="btn-mini-img img-active" onclick="setImage(this);">
+                                <img src="{{ i.imagen.url }}" alt="" class="img-fluid">
+                            </button>
+                            {% else %}
+                            <button id="image-{{i.id}}" data-img_url="{{ i.imagen.url }}" class="btn-mini-img" onclick="setImage(this)">
+                                <img src="{{ i.imagen.url }}" alt="" class="img-fluid">
+                            </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <button class="btn w-100 fs-2 border-0 w-auto h-auto d-none d-sm-none d-lg-block" onclick="nextImage()">
+                        <i class="bi bi-chevron-compact-down"></i>
+                    </button>
+                    <button class="btn w-100 fs-2 border-0 w-auto h-auto d-lg-none d-sm-block" onclick="nextImage()">
+                        <i class="bi bi-chevron-compact-right"></i>
+                    </button>
+                </div>
+
+                <!--********************************************** CARRUSEL DE IMAGENES **********************************************-->
+
+
+                <!--************************************************* IMAGEN ZOOMED **************************************************-->
+                
+                <div class="col-lg-10 col-md-12 col-sm-12 contenedor-image" id="imagen-zoomed">
+                    <img src="{{ producto.imagenproducto_set.first.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                </div>
+
+                <!--************************************************* IMAGEN ZOOMED **************************************************-->
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-4 col-sm-12">
+            <h1 class="my-4">{{ producto.nombre }}</h1>
+
+            <p class="lead">MXN {{ producto.precio_venta|money_format }}</p>
+            <small class="text-end">Código: {{ producto.codigo }}</small>
+
+            {% if producto.stock == 0 %}
+            <span class="badge bg-danger">Agotado</span>
+            {% endif %}
+            
+            <h4 class="fw-bold">Selecciona tu talla:</h4>
+
+            <form id="form-comprar_producto" class="container" method="POST">{% csrf_token %}
+                
+                <div class="row my-3">
+                    <div class="form-group col-6">
+                        <label for="producto-tallas" class="form-label mt-1">Talla:</label>
+                        <select name="id_talla" id="producto-tallas" class="form-control" onchange="getStockOptions(this);" {% if producto.stock == 0 %}disabled{% endif %}>
+                            <option value="" selected disabled>Elige</option>
+                            {% for talla in producto.tallaproducto_set.all %}
+                                {% if talla.stock > 0 %}
+                                <option value="{{talla.id}}">{{talla.talla}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label for="producto-stock" class="form-label mt-1">Cantidad:</label>
+                        <select name="cantidad" id="producto-stock" class="form-control" {% if producto.stock == 0 %}disabled{% endif %}>
+                            <option value="">--</option>                            
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" name="id_producto" value="{{ producto.id }}">
+
+                {% if request.user.is_authenticated %}
+                <button type="button" class="btn btn-info w-100 my-2" onclick="agregarProductoCarrito();">
+                    Agregar al carrito
+                </button>
+                <button type="button" class="btn btn-outline-{% if True %}secondary{% else %}danger{% endif %} w-100 my-2">
+                    <i class="bi bi-heart"></i>
+                    Agregar a la lista de deseos
+                </button>
+                {% else %}
+                <a type="button" class="btn btn-info w-100 my-2" href="{% url 'login' %}?next={{request.get_full_path}}">
+                    Agregar al carrito
+                </a>
+                <a  class="btn btn-outline-secondary w-100 my-2" href="{% url 'login' %}?next={{request.get_full_path}}">
+                    <i class="bi bi-heart"></i>
+                    Agregar a la lista de deseos
+                </a>
+                {% endif %}
+
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="text-center py-5 bg-white">
+    <h2>DESCRIPCIÓN</h2>
+</div>
+
+<div class="container my-5">
+    {{ producto.descripcion | safe }}
+</div>
+
+{% endblock %}

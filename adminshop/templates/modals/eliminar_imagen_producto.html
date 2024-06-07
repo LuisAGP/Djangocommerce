@@ -1,0 +1,15 @@
+{% extends 'modal.html' %}
+
+
+{% block idModal %}modal-eliminarProductoImagen{% endblock %}
+{% block modalTitle %}Eliminar Imagen{% endblock %}
+{% block form %}onsubmit="eliminarImagenProducto(); return false;" id="form-eliminarProductoImagen"{% endblock %}
+
+{% block modalBody %}
+<p class="text-secondary text-center">¿ Deseas eliminar la imagen ?</p>
+<input type="hidden" name="id_imagen" id="modal-eliminarProductoImagen-id_imagen">
+{% endblock %}
+
+{% block modalButton %}
+<button type="submit" class="btn btn-danger">Eliminar</button>
+{% endblock %}

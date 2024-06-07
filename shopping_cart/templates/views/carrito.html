@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block title %}Carrito{% endblock %}
+
+{% block body %}
+{% if carrito %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9 col-sm-12">
+            <div class="row p-3">
+                {% for i in detalles %}
+                <div class="col-lg-4 col-sm-12">
+                    <img src="{{ i.producto.imagenproducto_set.first.imagen.url }}" class="img-fluid">
+                </div>
+                <div class="col-lg-8 col-sm-12">
+                    <h3 class="fw-bold">{{i.producto.nombre}}</h3>
+                    <p class="m-0">
+                        <small>Talla: <span>{{i.talla.talla}}</span></small>
+                    </p>
+                    <p class="m-0">
+                        <small>Código: <span>{{i.producto.codigo}}</span></small>
+                    </p>
+                    <div class="form-group  w-25">
+                        <div class="d-flex align-items-center">
+                            <small class="me-1">Cantidad: </small>
+                            <select name="cantidad" id="producto-stock" class="form-control form-control-sm text-center" data-id_detalle="{{i.id}}" onchange="actualizarPrecioProductoCarrito(this)">
+                                {% for c in i.talla.stock|times %}
+                                {% if c == i.cantidad %}
+                                <option value="{{c}}" selected>{{c}}</option>
+                                {% else %}
+                                <option value="{{c}}">{{c}}</option>
+                                {% endif %}
+                                {% endfor %}                            
+                            </select>
+                        </div>
+                    </div>
+                    {% multiply i.producto.precio_venta i.cantidad as total_producto %}
+                    <h4 class="fw-bold mt-3" id="total_producto-{{i.id}}">MXN {{ total_producto |money_format }}</h4>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 d-lg-none d-sm-block">
+            <div class="card my-3 w-100">
+                <div class="card-body">
+                    <h2 class="mb-3 fw-lighter">Resumen</h2>
+                    <table class="w-100" style="line-height: 2;">
+                        <tr>
+                            <td><strong>Subtotal:</strong></td>
+                            <td class="text-end">{{ subtotal|money_format }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gastos de envió:</strong></td>
+                            <td class="text-end">{{ carrito.precio_envio|money_format }}</td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <table class="w-100">
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td class="text-end">{{ total|money_format }}</td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-info w-100 mt-3 text-uppercase">Proceder con el pago</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 position-fixed top-1 end-0 d-none d-lg-block">
+            <div class="card my-3 w-100">
+                <div class="card-body">
+                    <h2 class="mb-3 fw-lighter">Resumen</h2>
+                    <table class="w-100" style="line-height: 2;">
+                        <tr>
+                            <td><strong>Subtotal:</strong></td>
+                            <td class="text-end">{{ subtotal|money_format }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gastos de envió:</strong></td>
+                            <td class="text-end">{{ carrito.precio_envio|money_format }}</td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <table class="w-100">
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td class="text-end">{{ total|money_format }}</td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-info w-100 mt-3 text-uppercase">Proceder con el pago</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container h-100 w-100 d-flex justify-content-center align-items-center">
+    <p class="lead">El carrito esta vació</p>
+</div>
+{% endif %}
+{% endblock %}

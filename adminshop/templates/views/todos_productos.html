@@ -1,0 +1,85 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content_header %}
+<h2>Todos los productos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-2 overflow-auto">
+    <table class="table table-hover text-center" style="min-width: 500px">
+        <thead class="table-primary">
+          <tr>
+            <th scope="col">Acciones</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Precio de venta</th>
+            <th scope="col">Precio de compra</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>
+                        <a 
+                            href="{% url 'editar_producto' id=producto.id %}" class="btn btn-success btn-sm">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a 
+                            class="btn btn-danger btn-sm" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modal-eliminarProducto" 
+                            data-id_producto="{{ producto.id }}"
+                            data-nombre="{{ producto.nombre }}"
+                            >
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </td>
+                    <td>{{ producto.nombre }}</td>
+                    <td style="max-width: 100px;">
+                        <img src="{{ producto.imagenproducto_set.first.imagen.url }}" alt="" class="img-fluid"/>
+                    </td>
+                    <th>{{ producto.categoria }}</th>
+                    <td>{{ producto.precio_venta|money_format }}</td>
+                    <td>{{ producto.precio_compra|money_format }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="w-100 d-flex justify-content-end">
+        <ul class="pagination">
+
+            {% if productos.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ productos.previous_page_number }}">&laquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link" href="#">&laquo;</a>
+              </li>
+            {% endif %}
+
+            {% for i in productos.paginator.page_range %}
+              <li class="page-item {% if productos.number == i %}active{% endif %}">
+                <a class="page-link" href="?page={{i}}">{{i}}</a>
+              </li>
+            {% endfor %}
+
+            {% if productos.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ productos.next_page_number }}">&raquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link" href="#">&raquo;</a>
+              </li>
+            {% endif %}
+            
+        </ul>
+    </div>
+</div>
+{% include 'modals/eliminar_producto_modal.html' %}
+{% endblock %}

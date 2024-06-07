@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Djcom | {% block title %}{% endblock %}</title>
+
+    <!-- jQuery -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+
+        let urlBase = window.location.origin;
+        let csrfToken = "";
+
+        window.onload = function(e){
+            let input = document.getElementsByName("csrfmiddlewaretoken");
+            csrfToken = input[0] ? input[0].value : "";
+        }
+
+    </script>
+    {% block scripts %}{% endblock %}
+    <script src="{% static 'js/app.js' %}"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto+Condensed:wght@300;400;700&family=Satisfy&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    
+    <!-- Custom Styles CSS -->
+    {% block styles %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+</head>
+<body>
+
+    <!-- END************************************************HEADER*********************************************** -->
+    {% block header %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3 py-1" id="rm-navbar">
+        <div class="container-fluid">
+            <a href="{% url 'home' %}" class="navbar-brand col-lg-1 col-md-2 col-2">
+                <img src="{% static 'img/logo.png' %}" alt="" class="bi" width="38" height="38" aria-label="Bootstrap">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
+                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav d-flex justify-content-between me-auto w-50">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Nuevos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Mujeres</a>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="#">Calzado</a>
+                          <a class="dropdown-item" href="#">Ropa</a>
+                          <a class="dropdown-item" href="#">Accesorios</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Hombres</a>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="#">Calzado</a>
+                          <a class="dropdown-item" href="#">Ropa</a>
+                          <a class="dropdown-item" href="#">Accesorios</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Niños</a>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="#">Calzado</a>
+                          <a class="dropdown-item" href="#">Ropa</a>
+                          <a class="dropdown-item" href="#">Accesorios</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Colecciones</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-3 d-none d-sm-flex align-items-center">
+                    <li class="nav-item"><a href="#" class="nav-link">Pedidos</a></li>
+                    <li class="nav-item fs-5"><a href="#" class="nav-link"><i class="bi bi-heart"></i></a></li>
+                    <li class="nav-item fs-5">
+                        <a class="nav-link" data-bs-toggle="offcanvas" href="#mini_carrito" role="button" aria-controls="mini_carrito" onclick="cargarMiniCarrito()">
+                            <i class="bi bi-cart2"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person"></i></a>
+                        <div class="dropdown-menu fixed-position">
+                            {% if request.user.is_authenticated %}
+                            <small class="px-3 bg-white text-muted">{{request.user.email}}</small>
+                            <hr>
+                            <a class="dropdown-item" href="#">Perfil</a>
+                            <a class="dropdown-item" href="#">Domicilios</a>
+                            <hr>
+                            {% if request.user.is_superuser %}
+                            <a class="dropdown-item" href="{% url 'admin_panel' %}">Administrar</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
+                            {% else %}
+                            <a class="dropdown-item" href="{% url 'login' %}?next={{request.get_full_path}}">Iniciar sesión</a>
+                            <a class="dropdown-item" href="{% url 'register' %}?next={{request.get_full_path}}">Registrarse</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav d-lg-none d-sm-flex">
+                    <li class="nav-item"><a href="#" class="nav-link">Pedidos</a></li>
+                </ul>
+
+                <ul class="navbar-nav d-lg-none d-sm-flex justify-content-between flex-row">
+                    <li class="nav-item fs-5"><a href="#" class="nav-link"><i class="bi bi-heart"></i></a></li>
+                    <li class="nav-item fs-5"><a href="{% url 'carrito' %}" class="nav-link"><i class="bi bi-cart2"></i></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person"></i></a>
+                        <div class="dropdown-menu position-absolute" style="right: 0; left: unset;">
+                            {% if request.user.is_authenticated %}
+                            <small class="px-3 bg-white text-muted">{{request.user.email}}</small>
+                            <hr>
+                            <a class="dropdown-item" href="#">Perfil</a>
+                            <a class="dropdown-item" href="#">Domicilios</a>
+                            <hr>
+                            {% if request.user.is_superuser %}
+                            <a class="dropdown-item" href="{% url 'admin_panel' %}">Administrar</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
+                            {% else %}
+                            <a class="dropdown-item" href="{% url 'login' %}?next={{request.get_full_path}}">Iniciar sesión</a>
+                            <a class="dropdown-item" href="{% url 'register' %}?next={{request.get_full_path}}">Registrarse</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+    <!-- END************************************************HEADER*********************************************** -->
+
+    {% block body %}{% endblock %}
+    {% block footer %}
+    <footer class="footer text-muted bg-primary py-5 text-white-50">
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-6">
+                    <p class="mb-1">Djcom - Don't stop selling.</p>
+                </div>
+                <div class="col-6">
+                    <p class="text-end">Powered by <a href="https://www.djangoproject.com/" target="_blank">Django</a></p>
+                </div>
+                <p class="mb-0">© Copyright {% now 'Y' %} <a href="{% url 'home' %}">Djcom</a></p>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+    {% csrf_token %}
+
+{% block modals %}{% endblock %}
+{% block alert %}
+{% include 'alert.html' %}
+{% endblock %}
+{% include 'mini_carrito.html' %}
+</body>
+</html>

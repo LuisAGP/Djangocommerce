@@ -1,0 +1,176 @@
+:root {
+    --dark: #505050;
+    --light: #f6f6f6;
+    --primary: #2c3e50;
+}
+
+html,body { 
+    height: 100%; 
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+h1{ font-size: 2.4rem; }
+h2{ font-size: 1.8rem; }
+h3{ font-size: 1.4rem; }
+h4{ font-size: 1rem; }
+h5{ font-size: 0.8rem; }
+h6{ font-size: 0.6rem; }
+
+a{ text-decoration: none; }
+
+body {
+    padding-bottom: 40px;
+    background-color: var(--light);
+    height: 100vh;
+}
+
+.main-content {
+    position: fixed;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+.form-style {
+    width: 100%;
+    min-height: 100vh;
+    max-width: 330px;
+    padding-top: 50px;
+    margin: auto;
+}
+
+.form-style form{
+    width: 100%;
+}
+
+.form-style .checkbox {
+    font-weight: 400;
+}
+
+.form-style .form-floating:focus-within {
+    z-index: 2;
+}
+
+#modal-content {
+    padding: .75rem 1.25rem;
+}
+
+.modal-bg-success{
+    color: #155724;
+    background-color: #d3ffdd;
+    border-color: #c3e6cb;
+}
+
+.modal-bg-danger{
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.fixed-position{
+    left: unset !important;
+    right: 0;
+}
+
+.dropDownBtn i{
+    font-size: 1.2rem;
+}
+
+.dropDownBtn p{
+    margin-left: .5rem !important;
+}
+
+.closed::before{
+    transition: all .3s ease !important;
+}
+
+.opened::before{
+    transition: all .3s ease !important;
+    transform: rotate(90deg) !important;
+}
+
+ul.nav-treeview{
+    margin-left: .5rem;
+}
+
+.hidden{
+    opacity: 0;
+    transition: all .2s ease;
+}
+
+.shown{
+    opacity: 1;
+    transition: all .2s ease;
+}
+
+.hover-content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(201, 201, 201, 0.3);
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scroll::-webkit-scrollbar {
+    display: none;
+}
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+.no-scroll {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.contenedor-image{
+    height: 70vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedor-image img{
+    max-height: 100%;
+}
+
+.btn-mini-img{
+    border: none;
+    outline: invert;
+    padding: .1rem;
+    margin: .1rem;
+    background-color: var(--light);
+}
+
+.img-active{
+    border: 1px solid var(--dark);
+    border-radius: 5%;
+}
+
+.btn-mini-img img{
+    max-height: 10rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .btn-mini-img img{
+        max-width: 5rem;
+    }
+
+    .contenedor-image{
+        height: auto;
+        padding: 1rem;
+    }
+}
+
+.mini-carrito-content {
+    width: 100%;
+    height: 72%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: .5rem 0;
+}

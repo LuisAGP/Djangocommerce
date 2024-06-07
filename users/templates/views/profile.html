@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block title %}Profile - {{ request.user.username }}{% endblock %}
+
+{% block body %}
+<main class="container m-auto text-center px-5 py-2">
+    <div class="row g-4">
+        <div class="col d-flex align-items-start">
+            <div>
+                <h2 class="mb-3">Profile</h2>
+            </div>
+        </div>
+    </div>
+    <form action="" method="post" class="py-2" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="text-start">
+            {% bootstrap_form user_form %}
+            {% bootstrap_form profile_form %}
+        </div>
+        <button type="submit" class="btn btn-danger">Save</button>
+    </form>
+</main>
+{% endblock %}

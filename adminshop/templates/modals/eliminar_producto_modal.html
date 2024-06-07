@@ -1,0 +1,15 @@
+{% extends 'modal.html' %}
+
+
+{% block idModal %}modal-eliminarProducto{% endblock %}
+{% block modalTitle %}Eliminar Producto{% endblock %}
+{% block action %}{% url 'eliminar_producto' %}{% endblock %}
+
+{% block modalBody %}
+<p class="text-secondary text-center">¿ Estas seguro que quires eliminar <strong id="modal-eliminarProducto-nombre"></strong> ?</p>
+<input type="hidden" name="id_producto" id="modal-eliminarProducto-id_producto">
+{% endblock %}
+
+{% block modalButton %}
+<button type="submit" class="btn btn-danger">Eliminar</button>
+{% endblock %}
